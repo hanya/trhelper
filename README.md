@@ -15,8 +15,8 @@ See each directories if you need details.
 
 * [Help Location Extension](#help-location-extension)
 * [Help with Link to Resource Location](#help-with-link-to-resource-location)
-* [Help Viewer Hacker](help-viewer-hacker)
-* [Comment Search Plug-In for OmegaT](comment-search-plug-in-for-omegat)
+* [Help Viewer Hacker](#help-viewer-hacker)
+* [Comment Search Plug-In for OmegaT](#comment-search-plug-in-for-omegat)
 * [DB File to Tree](#db-file-to-tree)
 
 ## Help Location Extension
