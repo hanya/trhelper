@@ -1,0 +1,11 @@
+
+main_transform.xsl file is modified version on XSLT filter for xhp help 
+files of Apache OpenOffice licensed under Apache License 2.0. 
+See LICENSE file for detail. 
+
+Changes are:
+  - Add variables for pootle server.
+  - Add function to show id and link to the pootle server in 
+    paragraph, heading and note.
+  - Bookmarks values are visible.
+  - aHelp content is shown.

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<components xmlns="http://openoffice.org/2010/uno-components">
+ <component loader="com.sun.star.loader.Python"
+  uri="help.py">
+  <implementation name="foo.bar.hoge.help.HelpHacker">
+   <service name="foo.bar.hoge.help.HelpHacker"/>
+  </implementation>
+ </component>
+ <component loader="com.sun.star.loader.Python"
+  uri="search_interceptor.py">
+  <implementation name="foo.bar.hoge.help.FooBarSearchDispatchInterceptor">
+   <service name="foo.bar.hoge.help.FooBarSearchDispatchInterceptor"/>
+  </implementation>
+  <implementation name="foo.bar.hoge.help.FooBarSearchDispatchInterceptorForHelpViewer">
+   <service name="foo.bar.hoge.help.FooBarSearchDispatchInterceptorForHelpViewer"/>
+  </implementation>
+ </component>
+</components>

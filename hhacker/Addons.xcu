@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data 
+xmlns:oor="http://openoffice.org/2001/registry" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+oor:name="Addons" 
+oor:package="org.openoffice.Office">
+  <node oor:name="AddonUI">
+    <node oor:name="OfficeMenuBarMerging">
+      <node oor:name="foo.bar.hoge.help.HelpHacker" oor:op="replace">
+        <node oor:name="top" oor:op="replace">
+          <prop oor:name="MergePoint">
+            <value>.uno:HelpMenu\.uno:ExtendedHelp</value>
+          </prop>
+          <prop oor:name="MergeCommand">
+            <value>AddAfter</value>
+          </prop>
+          <prop oor:name="MergeFallback">
+            <value>AddPath</value>
+          </prop>
+          <prop oor:name="MergeContext">
+            <value></value>
+          </prop>
+          <node oor:name="MenuItems">
+            <node oor:name="item_01" oor:op="replace">
+              <prop oor:name="Title">
+                <value xml:lang="en-US">Help Tools</value>
+              </prop>
+              <prop oor:name="Target">
+                <value>_self</value>
+              </prop>
+              <prop oor:name="Context">
+                <value></value>
+              </prop>
+              <node oor:name="Submenu">
+                <node oor:name="sub_01" oor:op="replace">
+                  <prop oor:name="Title">
+                    <value xml:lang="en-US">Open Help - Pootle Location Search</value>
+                  </prop>
+                  <prop oor:name="URL">
+                    <value xml:lang="en-US">service:foo.bar.hoge.help.HelpHacker?mode=pootle</value>
+                  </prop>
+                  <prop oor:name="Target">
+                    <value>_self</value>
+                  </prop>
+                  <prop oor:name="Context">
+                    <value></value>
+                  </prop>
+                </node>
+                <node oor:name="sub_02" oor:op="replace">
+                  <prop oor:name="Title">
+                    <value xml:lang="en-US">Open Help - OmegaT Location Search</value>
+                  </prop>
+                  <prop oor:name="URL">
+                    <value xml:lang="en-US">service:foo.bar.hoge.help.HelpHacker?mode=omegat</value>
+                  </prop>
+                  <prop oor:name="Target">
+                    <value>_self</value>
+                  </prop>
+                  <prop oor:name="Context">
+                    <value></value>
+                  </prop>
+                </node>
+                
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</oor:component-data>
