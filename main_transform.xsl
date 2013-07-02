@@ -150,11 +150,14 @@
 <xsl:variable name="pootle" select="concat('https://translate.apache.org/',$target_lang,'/aoo40help/translate.html')"/>
 
 <!-- change from select="'pootle'" to select="'omegat'" if you want. -->
-<xsl:variable name="search_type" select="'pootle'"/>
+<xsl:variable name="search_type" select="'foobar'"/>
 <xsl:variable name="searchprefix">
     <xsl:choose>
         <xsl:when test="$search_type='omegat'">
-            <xsl:value-of select="concat('http://localhost:8080/search/')"/>
+            <xsl:value-of select="'http://localhost:8080/search/'"/>
+        </xsl:when>
+        <xsl:when test="$search_type='foobar'">
+            <xsl:value-of select="concat('.uno:FooBarSearch?language=',$target_lang,'&amp;category=help&amp;keyword=')"/>
         </xsl:when>
         <xsl:otherwise><!-- default is pootle -->
             <xsl:value-of select="concat($pootle,'#sfields=locations&amp;search=')"/>
@@ -646,9 +649,11 @@
     <!-- Parse always to get correct file name for embedded one. -->
     <xsl:variable name="ffname" select="/helpdocument/meta/topic/filename"/>
     <xsl:variable name="fname">
+        <!-- For Pootle direct link.
         <xsl:call-template name="namepart">
             <xsl:with-param name="z" select="$ffname"/>
-        </xsl:call-template>
+        </xsl:call-template> -->
+        <xsl:value-of select="$ffname"/>
     </xsl:variable>
     
     <xsl:choose>
