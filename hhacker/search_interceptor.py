@@ -31,7 +31,7 @@ class ServiceInfo(XServiceInfo):
 
 
 pootle_url = "https://translate.apache.org/{LANG}/aoo40{CATEGORY}/translate.html#sfields=locations&search="
-omegat_url = "http://localhost:{PORT}/search/"
+omegat_url = "http://localhost:{PORT}/locations/"
 
 help_port = "54378"
 ui_port = "54398"
