@@ -647,8 +647,8 @@
 <xsl:template name="callsearcher">
     <xsl:param name="id"/>
     <xsl:param name="oldref"/>
+    <xsl:param name="ffname" select="/helpdocument/meta/topic/filename"/>
     <!-- Parse always to get correct file name for embedded one. -->
-    <xsl:variable name="ffname" select="/helpdocument/meta/topic/filename"/>
     <xsl:variable name="fname">
         <!-- For Pootle direct link.
         <xsl:call-template name="namepart">
@@ -880,6 +880,11 @@
 		<xsl:when test="$doc//variable[@id=$anchor]"> <!-- then test for a variable of that name -->
 			<p class="embedded">
 				<xsl:apply-templates select="$doc//variable[@id=$anchor]" mode="embedded"/>
+                <xsl:call-template name="callsearcher">
+                    <xsl:with-param name="id" select="$doc//variable[@id=$anchor]/../@id"/>
+                    <xsl:with-param name="oldref" select="$doc//variable[@id=$anchor]/../@oldref"/>
+                    <xsl:with-param name="ffname" select="$doc/helpdocument/meta/topic/filename"/>
+                </xsl:call-template>
 			</p>
 		</xsl:when>
 		<xsl:otherwise> <!-- then give up -->
