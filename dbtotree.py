@@ -103,13 +103,16 @@ class MergedTree(object):
         
         _escape = escape
         for module, module_name in zip(self.modules, self.module_names):
+            module_prefix = "text/{}/".format(module.lower())
             # sort in page path
             w("<node id=\"{ID}\" title=\"{MODULE_NAME}\">\n".format(
                     ID=hash(module_name), MODULE_NAME=module_name + " - Sorted in page path"))
             pages = _modules[module]
             for page, value in sorted(pages.items()):
-                w("<topic id=\"{MODULE}/{PAGE}\">{TITLE}</topic>\n".format(
-                    MODULE=module, PAGE=page, TITLE=_escape(value[0])))
+                #print(page)
+                if page.startswith(module_prefix):
+                    w("<topic id=\"{MODULE}/{PAGE}\">{TITLE}</topic>\n".format(
+                        MODULE=module, PAGE=page, TITLE=_escape(value[0])))
             w("</node>\n")
             
             # sort in page title
@@ -117,8 +120,9 @@ class MergedTree(object):
                     ID=hash(module_name)+1, MODULE_NAME=module_name + " - Sorted in page title"))
             entries = [(value[0], page) for page, value in pages.items()]
             for value, page in sorted(entries):
-                w("<topic id=\"{MODULE}/{PAGE}\">{TITLE}</topic>\n".format(
-                    MODULE=module, PAGE=page, TITLE=_escape(value)))
+                if page.startswith(module_prefix):
+                    w("<topic id=\"{MODULE}/{PAGE}\">{TITLE}</topic>\n".format(
+                        MODULE=module, PAGE=page, TITLE=_escape(value)))
             w("</node>\n")
         
         w(tree_footer)
