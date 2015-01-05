@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data 
+  xmlns:oor="http://openoffice.org/2001/registry" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+  oor:package="org.openoffice.Office" 
+  oor:name="OptionsDialog">
+  <node oor:name="Nodes">
+    <node oor:name="Internet" oor:op="fuse">
+      <node oor:name="Leaves">
+        <node oor:name="foo.bar.hoge.help.FooBarSearch.SettingsNode" oor:op="fuse">
+          <prop oor:name="Id">
+            <value>foo.bar.hoge.help.FooBarSearch.SettingsNode</value>
+          </prop>
+          <prop oor:name="Label">
+            <value xml:lang="en-US">hhacker</value>
+          </prop>
+          <prop oor:name="OptionsPage">
+            <value>%origin%/dialogs/Options.xdl</value>
+          </prop>
+          <prop oor:name="EventHandlerService">
+            <value>foo.bar.hoge.help.FooBarSearchOptionsPageHandler</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+  </node>
+</oor:component-data>

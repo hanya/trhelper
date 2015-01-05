@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data 
+xmlns:oor="http://openoffice.org/2001/registry" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+oor:package="foo.bar.hoge.help" 
+oor:name="FooBarSearch">
+  <node oor:name="Settings">
+    <prop oor:name="PootleURL" oor:type="xs:string">
+      <value>https://translate.apache.org/{LANG}/{PROJECT}{CATEGORY}/translate.html#sfields=locations&amp;search=</value>
+    </prop>
+    <prop oor:name="PootleProjectName" oor:type="xs:string">
+      <value>aoo40</value>
+    </prop>
+    <prop oor:name="OmegaTURL" oor:type="xs:string">
+      <value>http://localhost:{PORT}/locations/</value>
+    </prop>
+    <prop oor:name="UIPort" oor:type="xs:string">
+      <value>54398</value>
+    </prop>
+    <prop oor:name="HelpPort" oor:type="xs:string">
+      <value>54378</value>
+    </prop>
+  </node>
+</oor:component-data>

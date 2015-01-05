@@ -14,5 +14,8 @@
   <implementation name="foo.bar.hoge.help.FooBarSearchDispatchInterceptorForHelpViewer">
    <service name="foo.bar.hoge.help.FooBarSearchDispatchInterceptorForHelpViewer"/>
   </implementation>
+  <implementation name="foo.bar.hoge.help.FooBarSearchOptionsPageHandler">
+   <service name="foo.bar.hoge.help.FooBarSearchOptionsPageHandler"/>
+  </implementation>
  </component>
 </components>

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-schema 
+xml:lang="en-US" 
+xmlns:oor="http://openoffice.org/2001/registry" 
+xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+oor:package="foo.bar.hoge.help" 
+oor:name="FooBarSearch">
+  <info>
+    <desc>FooBarSearch settings.</desc>
+  </info>
+  <component>
+    <group oor:name="Settings">
+      <info>
+        <desc>Setting extension wide.</desc>
+      </info>
+      <prop oor:name="PootleURL" oor:type="xs:string">
+        <info>
+          <desc>URL to Pootle server.</desc>
+        </info>
+      </prop>
+      <prop oor:name="PootleProjectName" oor:type="xs:string">
+        <info>
+          <desc>Project name in the pootle server.</desc>
+        </info>
+      </prop>
+      <prop oor:name="OmegaTURL" oor:type="xs:string">
+        <info>
+          <desc>URL to OmegaT search plugin.</desc>
+        </info>
+      </prop>
+      <prop oor:name="UIPort" oor:type="xs:string">
+        <info>
+          <desc>Port number for UI part of OmegaT search plugin.</desc>
+        </info>
+      </prop>
+      <prop oor:name="HelpPort" oor:type="xs:string">
+        <info>
+          <desc>Port number for Help part of OmegaT search plugin.</desc>
+        </info>
+      </prop>
+    </group>
+  </component>
+</oor:component-schema>

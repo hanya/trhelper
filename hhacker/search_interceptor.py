@@ -11,6 +11,8 @@ import unohelper
 from com.sun.star.frame import XDispatchProviderInterceptor, XDispatch, \
     XControlNotificationListener
 from com.sun.star.lang import XInitialization, XServiceInfo
+from com.sun.star.awt import XContainerWindowEventHandler
+from com.sun.star.beans import PropertyValue
 
 
 class ServiceInfo(XServiceInfo):
@@ -30,11 +32,93 @@ class ServiceInfo(XServiceInfo):
         return klass, klass.IMPLE_NAME, klass.SERVICE_NAMES
 
 
-pootle_url = "https://translate.apache.org/{LANG}/aoo40{CATEGORY}/translate.html#sfields=locations&search="
-omegat_url = "http://localhost:{PORT}/locations/"
+class OptionsPageHandler(unohelper.Base, 
+        XContainerWindowEventHandler, ServiceInfo):
+    
+    IMPLE_NAME = "foo.bar.hoge.help.FooBarSearchOptionsPageHandler"
+    SERVICE_NAMES = IMPLE_NAME,
+    
+    def __init__(self, ctx, *args):
+        self.ctx = ctx
+        self.dialog = None
+    
+    # XContainerWindowEventHandler
+    def getSupportedMethodNames(self):
+        return ("external_event", )
+    
+    def callHandlerMethod(self, window, ev, name):
+        if name == "external_event":
+            self.handle(window, ev)
+    
+    def handle(self, dialog, ev):
+        self.dialog = dialog
+        name = self.dialog.getModel().Name
+        if ev == "ok":
+            getattr(self, "confirm_" + name)()
+        elif ev == "back":
+            getattr(self, "init_" + name)()
+        elif ev == "initialize":
+            getattr(self, "init_" + name)(first_time=True)
+        return True
+    
+    def get(self, name):
+        return self.dialog.getControl(name)
+    
+    def get_text(self, name):
+        return self.get(name).getModel().Text
+    
+    def set_text(self, name, text):
+        if text is None:
+            text = ""
+        self.get(name).getModel().Text = text
+    
+    def init_Options(self, first_time=False):
+        try:
+            d = Config(self.ctx).get_config_map()
+            for key, value in d.items():
+                self.set_text("edit{}".format(key), value)
+        except Exception as e:
+            print(e)
+    
+    def confirm_Options(self):
+        names = self.dialog.getModel().getElementNames()
+        d = {name[4:]: self.get_text(name) for name in names if name.startswith("edit")}
+        Config(self.ctx).set_from_map(d)
 
-help_port = "54378"
-ui_port = "54398"
+
+class Config:
+    """ Configuration reader-writer. """
+    NODE_NAME = "/foo.bar.hoge.help.FooBarSearch/Settings"
+    
+    def __init__(self, ctx, modifiable=False):
+        self.ctx = ctx
+        self.config = self.get_config(self.NODE_NAME, modifiable)
+    
+    def create_service(self, name):
+        return self.ctx.getServiceManager().createInstanceWithContext(name, self.ctx)
+    
+    def get_config(self, nodepath, modifiable=False):
+        """ Get configuration node. """
+        cp = self.create_service("com.sun.star.configuration.ConfigurationProvider")
+        node = PropertyValue("nodepath", -1, nodepath, 0)
+        if modifiable:
+            name = "com.sun.star.configuration.ConfigurationUpdateAccess"
+        else:
+            name = "com.sun.star.configuration.ConfigurationAccess"
+        return cp.createInstanceWithArguments(name, (node,))
+    
+    def get(self, name):
+        return self.config.getPropertyValue(name)
+    
+    def get_config_map(self):
+        config = self.config
+        return {name: config.getPropertyValue(name) for name in config.getElementNames()}
+    
+    def set_from_map(self, d):
+        config = self.config
+        for key, value in d.items():
+            config.setPropertyValue(key, value)
+        config.commitChanges()
 
 
 class Dispatcher(unohelper.Base, XDispatch, XControlNotificationListener):
@@ -44,11 +128,13 @@ class Dispatcher(unohelper.Base, XDispatch, XControlNotificationListener):
         # text/shared/01/online_update.xhp%23hd_id315256.help.text
     """
     
-    def __init__(self, parse_result, mode="pootle"):
-        if parse_result.scheme != ".uno" or \
-           parse_result.path != "FooBarSearch":
-            raise Exception("Illegal URL: " + str(parse_result))
+    def __init__(self, config, mode="pootle"):
         self.mode = mode
+        self.pootle_url = config["PootleURL"]
+        self.omegat_url = config["OmegaTURL"]
+        self.help_port = config["HelpPort"]
+        self.ui_port = config["UIPort"]
+        self.project = config["PootleProjectName"]
     
     # XDispatch
     def dispatch(self, url, args):
@@ -73,17 +159,17 @@ class Dispatcher(unohelper.Base, XDispatch, XControlNotificationListener):
             # last part only
             _keyword = keyword.split("/")[-1]
             
-            url = pootle_url.format(
-                    LANG=qs["language"][0], CATEGORY=category) + _keyword
+            url = self.pootle_url.format(
+                    LANG=qs["language"][0], PROJECT=self.project, CATEGORY=category) + _keyword
             webbrowser.open(url)
     
     def search_in_omegat(self, r, qs):
         keyword = qs["keyword"][0] + "%23" + r.fragment
         category = qs["category"][0] if "category" in qs else "help"
-        port = help_port if category == "help" else ui_port
+        port = self.help_port if category == "help" else self.ui_port
         
         _keyword = keyword.lstrip("/")
-        url = omegat_url.format(PORT=port) + _keyword
+        url = self.omegat_url.format(PORT=port) + _keyword
         try:
             f = urlopen(url)
             f.close()
@@ -117,6 +203,7 @@ class FooBarSearchDispatchInterceptor(unohelper.Base, ServiceInfo, XDispatchProv
         self.mode = "pootle"
         self.slave = None
         self.master = None
+        self.dispatcher = None
         self.initialize(args)
     
     def create_service(self, name):
@@ -149,12 +236,14 @@ class FooBarSearchDispatchInterceptor(unohelper.Base, ServiceInfo, XDispatchProv
         for arg in args:
             if arg.Name == "Mode":
                 self.mode = arg.Value
+        if not self.dispatcher:
+            self.dispatcher = Dispatcher(Config(self.ctx).get_config_map(), self.mode)
     
     # XDispatchProvider
     def queryDispatch(self, url, name, flag):
         if url.Complete.startswith(".uno:FooBarSearch?"):
             try:
-                return Dispatcher(urlparse(url.Complete), self.mode)
+                return self.dispatcher
             except Exception as e:
                 print(e)
                 return None
@@ -234,4 +323,5 @@ g_ImplementationHelper.addImplementation(
     *FooBarSearchDispatchInterceptor.get_info())
 g_ImplementationHelper.addImplementation(
     *ForHelpViewer.get_info())
-
+g_ImplementationHelper.addImplementation(
+    *OptionsPageHandler.get_info())
